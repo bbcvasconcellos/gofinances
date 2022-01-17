@@ -6,12 +6,12 @@ export const HighlightCard = () => {
     <Container>
       <Header>
         <Title>Income</Title>
-        <Icon/>
-        <Footer>
-          <Amount>$3,000</Amount>
-          <LastTransaction>Last transaction: April 13th</LastTransaction>
-        </Footer>
+        <Icon name="arrow-up-circle"/>
       </Header>
+      <Footer>
+        <Amount>$3,000</Amount>
+        <LastTransaction>Last transaction: April 13th</LastTransaction>
+      </Footer>
     </Container>
   )
 }
