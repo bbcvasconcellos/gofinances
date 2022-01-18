@@ -1,16 +1,32 @@
 import React from "react";
-import { Container, Title, Header, Icon, Footer, Amount, LastTransaction } from "./style";
+import { Container, Title, Header, Icon, Footer, Amount, LastTransaction } from "./styles";
 
-export const HighlightCard = () => {
+interface CardProps {
+  type: 'up' | 'down' | 'total';
+  title: string;
+  lastTransaction: string;
+  amount: string;
+}
+
+const icon = {
+  up: 'arrow-up-circle',
+  down: 'arrow-down-circle',
+  total: 'dollar-sign'
+}
+
+export const HighlightCard = ({ title, amount, lastTransaction, type }: CardProps) => {
   return (
-    <Container>
+    <Container type={ type }>
       <Header>
-        <Title>Income</Title>
-        <Icon name="arrow-up-circle"/>
+        <Title type={ type }>{title}</Title>
+        <Icon 
+          name={icon[type]} 
+          type={ type }
+        />
       </Header>
       <Footer>
-        <Amount>$3,000</Amount>
-        <LastTransaction>Last transaction: April 13th</LastTransaction>
+        <Amount type={ type }>{amount}</Amount>
+        <LastTransaction type={ type }>{lastTransaction}</LastTransaction>
       </Footer>
     </Container>
   )
