@@ -1,5 +1,8 @@
+import { getBottomSpace } from "react-native-iphone-x-helper"
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
 import styled from "styled-components/native"
+import { FlatList, FlatListProps } from "react-native"
+import { DataListProps } from "."
 
 export const Transactions = styled.View`
   flex: 1;
@@ -12,3 +15,10 @@ export const Title = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
   margin-bottom: 16px;
 `
+
+export const TransactionsList = styled(FlatList as new (props: FlatListProps<DataListProps>) => FlatList<DataListProps>).attrs({
+  showsVerticalScrollIndicator: false,
+  contentContainerStyle: {
+    paddingBottom: getBottomSpace() /* add some padding to the bottom of iphone x screen */
+  }
+})``

@@ -1,17 +1,38 @@
 import React from "react"
 import { Amount, Category, CategoryName, Container, Date, Footer, Icon, Title } from "./styles"
 
-export const TransactionCard = () => {
+
+interface Category {
+  name: string;
+  icon: string;
+}
+
+export interface Data {
+  type: 'positive' | 'negative';
+  title: string;
+  amount: string;
+  category: Category;
+  date: string;
+}
+
+interface TransactionCardProps {
+  data: Data;
+}
+
+export const TransactionCard = ({ data }: TransactionCardProps) => {
   return(
     <Container>
-      <Title>App Development</Title>
-      <Amount>$5,000</Amount>
+      <Title>{data.title}</Title>
+      <Amount type={data.type}>
+        {data.type === 'negative' && '- '}
+        {data.amount}
+      </Amount>
       <Footer>
         <Category>
-          <Icon name="dollar-sign"/>
-          <CategoryName>Work</CategoryName>
+          <Icon name={data.category.icon}/>
+          <CategoryName>{data.category.name}</CategoryName>
         </Category>
-        <Date>01/15/2022</Date>
+        <Date>{data.date}</Date>
       </Footer>
     </Container>
   )
