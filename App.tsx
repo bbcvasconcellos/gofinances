@@ -10,6 +10,7 @@ import AppLoading from 'expo-app-loading';
 /* import { Dashboard } from './src/screens/Dashboard'; */
 import { Register } from './src/screens/Register';
 import theme from './src/Global/Styles/theme'
+import { CategorySelect } from './src/screens/CategorySelect';
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={ theme }>
+      {/* <CategorySelect /> */}
       <Register />
       {/* <Dashboard /> */}
     </ThemeProvider>
