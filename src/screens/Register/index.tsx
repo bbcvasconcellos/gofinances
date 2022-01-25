@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import { Modal, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Input } from "../../components/Forms/Input";
+import { InputForm } from "../../components/Forms/InputForm";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
 import { Button } from "../../components/Forms/Button";
 import { Container, Header, Title, Form, ButtonContainer, Fields } from "./styles";
 import { CategorySelection } from "../../components/Forms/CategorySelection";
 import { CategorySelect } from "../CategorySelect";
+import { useForm } from "react-hook-form";
+
+
+interface FormData {
+  /* name: string;
+  amount: string; */
+  [key: string]: string; 
+}
 
 export const Register = () => {
   const [selectedButton, setSelectedButton] = useState('');
@@ -14,6 +23,7 @@ export const Register = () => {
     key: 'category',
     name: 'Category',
   });
+  const { control, handleSubmit } = useForm();
 
   const handleSelection = (type: 'up' | 'down') => {
     setSelectedButton(type)
@@ -27,6 +37,17 @@ export const Register = () => {
     setOpenModal(true);
   }
 
+  const handleRegisterNewTransaction = (form: FormData) => {
+    const data = {
+      name: form.name,
+      amount: form.amount,
+      selectedButton,
+      category: category.name
+    }
+    console.log(data);
+    
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <Container>
@@ -35,10 +56,14 @@ export const Register = () => {
       </Header>
       <Form>
         <Fields>
-          <Input 
+          <InputForm
+            name="name"
+            control={control} 
             placeholder="Name"
           />
-          <Input 
+          <InputForm
+            name="amount"
+            control={control} 
             placeholder="Price"
           />
           <ButtonContainer>
@@ -60,7 +85,10 @@ export const Register = () => {
             onPress={handleOpenModal}  
           />
         </Fields>
-        <Button title="Confirm" />
+        <Button   
+          title="Confirm" 
+          onPress={handleSubmit(handleRegisterNewTransaction)}  
+        />
       </Form>
       <Modal visible={openModal}>
         <CategorySelect 
