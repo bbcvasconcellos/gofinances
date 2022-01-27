@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Modal, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import * as Yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "../../components/Forms/Input";
 import { InputForm } from "../../components/Forms/InputForm";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
@@ -16,6 +18,15 @@ interface FormData {
   [key: string]: string; 
 }
 
+//scheme of the shape with the variable that the form should have
+const scheme = Yup.object().shape({
+  name: Yup.string().required('Title is required'),
+  amount: Yup.number()
+  .typeError('Numeric value is required')
+  .positive('Amount cannot be a negative number')
+  .required('Amount is required')
+})
+
 export const Register = () => {
   const [selectedButton, setSelectedButton] = useState('');
   const [openModal, setOpenModal] = useState(false);
@@ -23,11 +34,13 @@ export const Register = () => {
     key: 'category',
     name: 'Category',
   });
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, formState: { errors } } = useForm({ 
+    resolver: yupResolver(scheme) //this will create a pattern (defined in scheme) for the form submission 
+  });
 
   const handleSelection = (type: 'up' | 'down') => {
     setSelectedButton(type)
-  }
+  }  
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -38,6 +51,15 @@ export const Register = () => {
   }
 
   const handleRegisterNewTransaction = (form: FormData) => {
+    if(!selectedButton) {
+      return Alert.alert('Please inform the transaction type');
+    }
+
+    if(category.key === 'category' || !category) {
+      return Alert.alert('Please select the transaction category')
+    }
+
+    //data will contain every input value
     const data = {
       name: form.name,
       amount: form.amount,
@@ -58,13 +80,18 @@ export const Register = () => {
         <Fields>
           <InputForm
             name="name"
-            control={control} 
+            control={control}
             placeholder="Name"
+            autoCapitalize="sentences"
+            autoCorrect={false}
+            error={errors.name && errors.name.message} 
           />
           <InputForm
             name="amount"
             control={control} 
             placeholder="Price"
+            keyboardType="numeric"
+            error={errors.amount && errors.amount.message} 
           />
           <ButtonContainer>
             <TransactionTypeButton 
