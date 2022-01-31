@@ -6,7 +6,9 @@ import {
   UserBox,
   UserGreeting,
   UserName,
-  Icon,} from "./style"
+  Icon,
+  LogoutButton
+} from "./style"
 
 export const UserHeader = () => {
   return (
@@ -20,7 +22,9 @@ export const UserHeader = () => {
           <UserName>Bruno!</UserName>
         </UserBox>
       </UserData>
-      <Icon name="power" />
+      <LogoutButton onPress={() => {}}>
+        <Icon name="power" />
+      </LogoutButton>
     </UserContainer>
   </Header>
   )

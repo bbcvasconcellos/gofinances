@@ -59,7 +59,7 @@ export const Register = () => {
       return Alert.alert('Please select the transaction category')
     }
 
-    //data will contain every input value
+    //data will contain every input value to be submitted
     const data = {
       name: form.name,
       amount: form.amount,
@@ -74,7 +74,7 @@ export const Register = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <Container>
       <Header>
-        <Title>Cadastro</Title>
+        <Title>Register</Title>
       </Header>
       <Form>
         <Fields>

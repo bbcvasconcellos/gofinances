@@ -1,16 +1,20 @@
 import React from "react";
-import { TouchableOpacityProps } from "react-native";
+import { RectButtonProps } from "react-native-gesture-handler";
 import { Container, Title } from "./styles";
 
-//brings all props from TouchableOpacity and add the title prop
-interface ButtonProps extends TouchableOpacityProps {
+//brings all props from RectButton and add the title prop
+interface ButtonProps extends RectButtonProps {
   title: string;
+  onPress: () => void;
 }
 
 
-export const Button = ({ title, ...rest }: ButtonProps) => {
+export const Button = ({ title, onPress, ...rest }: ButtonProps) => {
   return (
-    <Container {...rest}>
+    <Container 
+      onPress={onPress}
+      {...rest}
+    >
       <Title>{title}</Title>
     </Container>
   )
