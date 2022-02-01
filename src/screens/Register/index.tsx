@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import { useForm } from "react-hook-form";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import * as Yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Input } from "../../components/Forms/Input";
+
 import { InputForm } from "../../components/Forms/InputForm";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
 import { Button } from "../../components/Forms/Button";
 import { Container, Header, Title, Form, ButtonContainer, Fields } from "./styles";
 import { CategorySelection } from "../../components/Forms/CategorySelection";
 import { CategorySelect } from "../CategorySelect";
-import { useForm } from "react-hook-form";
+
 
 
 interface FormData {
@@ -38,6 +41,8 @@ export const Register = () => {
     resolver: yupResolver(scheme) //this will create a pattern (defined in scheme) for the form submission 
   });
 
+  const dataKey = "@gofinances:transactions";
+
   const handleSelection = (type: 'up' | 'down') => {
     setSelectedButton(type)
   }  
@@ -50,7 +55,7 @@ export const Register = () => {
     setOpenModal(true);
   }
 
-  const handleRegisterNewTransaction = (form: FormData) => {
+  const handleRegisterNewTransaction = async(form: FormData) => {
     if(!selectedButton) {
       return Alert.alert('Please inform the transaction type');
     }
@@ -60,15 +65,35 @@ export const Register = () => {
     }
 
     //data will contain every input value to be submitted
-    const data = {
+    const newTransaction = {
       name: form.name,
       amount: form.amount,
       selectedButton,
       category: category.name
     }
-    console.log(data);
     
+    try {
+      const data = await AsyncStorage.getItem(dataKey); //get any stored value
+      const currentData = data ? JSON.parse(data) : [];
+      const formattedData = [
+        ...currentData, //spread all the previous data from async storage
+        newTransaction //stores the new incoming data 
+      ]
+      await AsyncStorage.setItem(dataKey, JSON.stringify(formattedData)); //save the new formatted into async 
+    } 
+    catch(err) {
+      console.log(err);
+      Alert.alert('Could not save transaction');
+    }
   }
+
+  useEffect(() => {
+    const loadData = async() => {
+      const data = await AsyncStorage.getItem(dataKey)
+      console.log(JSON.parse(data!)); //obs: data! means data will always have some content
+    }
+    loadData()
+  }, [])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
