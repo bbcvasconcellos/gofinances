@@ -5,6 +5,7 @@ import { useTheme } from 'styled-components';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Dashboard } from '../screens/Dashboard';
 import { Register } from '../screens/Register';
+import { Spending } from '../screens/Spending';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -50,9 +51,9 @@ export const AppRoutes = () => {
           )
         }}
       />
-      {/* <Screen 
-        name="Listagem"
-        component={}
+      <Screen 
+        name="Spending"
+        component={ Spending }
         options={{
           tabBarIcon: (({ size, color }) => 
             <MaterialIcons 
@@ -62,7 +63,7 @@ export const AppRoutes = () => {
             />
           )
         }}
-      /> */}
+      /> 
     </Navigator>
   )
 }

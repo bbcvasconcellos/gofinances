@@ -4,7 +4,7 @@ import { Container, Title, Header, Icon, Footer, Amount, LastTransaction } from 
 interface CardProps {
   type: 'up' | 'down' | 'total';
   title: string;
-  lastTransaction: string;
+  lastTransaction?: string;
   amount: string;
 }
 

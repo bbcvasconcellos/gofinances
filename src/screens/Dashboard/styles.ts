@@ -8,11 +8,17 @@ export const Container = styled.View`
 
 export const HighlightCards = styled.ScrollView.attrs({
   horizontal: true,
-  showsHorizontalScrollIndicator: false, /* hides the default scrollbar on the bottom */
-  contentContainerStyle: { paddingHorizontal: 24 }
+  showsHorizontalScrollIndicator:
+    false /* hides the default scrollbar on the bottom */,
+  contentContainerStyle: { paddingHorizontal: 24 },
 })`
   width: 100%;
   position: absolute;
   margin-top: ${RFPercentage(20)}px;
-`
+`;
 
+export const LoadContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;

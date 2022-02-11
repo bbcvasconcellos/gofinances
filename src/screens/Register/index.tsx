@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import { useForm } from "react-hook-form";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
+import uuid from "react-native-uuid";
+import { useNavigation } from "@react-navigation/native";
 
 import { InputForm } from "../../components/Forms/InputForm";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
@@ -14,11 +16,14 @@ import { CategorySelection } from "../../components/Forms/CategorySelection";
 import { CategorySelect } from "../CategorySelect";
 
 
-
 interface FormData {
   /* name: string;
   amount: string; */
   [key: string]: string; 
+}
+
+type NavigationProps = {
+  navigate: (screen:string) => void;
 }
 
 //scheme of the shape with the variable that the form should have
@@ -37,13 +42,13 @@ export const Register = () => {
     key: 'category',
     name: 'Category',
   });
-  const { control, handleSubmit, formState: { errors } } = useForm({ 
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({ 
     resolver: yupResolver(scheme) //this will create a pattern (defined in scheme) for the form submission 
   });
-
+  const navigation = useNavigation<NavigationProps>();
   const dataKey = "@gofinances:transactions";
 
-  const handleSelection = (type: 'up' | 'down') => {
+  const handleSelection = (type: 'positive' | 'negative') => {
     setSelectedButton(type)
   }  
 
@@ -66,10 +71,12 @@ export const Register = () => {
 
     //data will contain every input value to be submitted
     const newTransaction = {
+      id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
-      selectedButton,
-      category: category.name
+      type: selectedButton,
+      category: category.key,
+      date: new Date()
     }
     
     try {
@@ -80,6 +87,14 @@ export const Register = () => {
         newTransaction //stores the new incoming data 
       ]
       await AsyncStorage.setItem(dataKey, JSON.stringify(formattedData)); //save the new formatted into async 
+      reset();
+      setSelectedButton('');
+      setCategory({
+        key: 'category',
+        name: 'Category',
+      });
+      navigation.navigate('Dashboard')
+      
     } 
     catch(err) {
       console.log(err);
@@ -87,14 +102,14 @@ export const Register = () => {
     }
   }
 
-  useEffect(() => {
+/*   useEffect(() => {
     const loadData = async() => {
       const data = await AsyncStorage.getItem(dataKey)
       console.log(JSON.parse(data!)); //obs: data! means data will always have some content
     }
     loadData()
   }, [])
-
+ */
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <Container>
@@ -122,14 +137,14 @@ export const Register = () => {
             <TransactionTypeButton 
               title="income"
               type="up"
-              onPress={() => handleSelection('up')}
-              isActive={selectedButton === 'up'}
+              onPress={() => handleSelection('positive')}
+              isActive={selectedButton === 'positive'}
             />
             <TransactionTypeButton 
               title="outcome"
               type="down"
-              onPress={() => handleSelection('down')}
-              isActive={selectedButton === 'down'}
+              onPress={() => handleSelection('negative')}
+              isActive={selectedButton === 'negative'}
             />
           </ButtonContainer>
           <CategorySelection 

@@ -1,4 +1,7 @@
 import React from 'react';
+import 'react-native-gesture-handler';
+import 'intl';
+import 'intl/locale-data/jsonp/en-US';
 import { ThemeProvider } from 'styled-components';
 import { 
   useFonts,
@@ -11,6 +14,7 @@ import AppLoading from 'expo-app-loading';
 import theme from './src/Global/Styles/theme'
 import { AppRoutes } from './src/routes/app.routes';
 import { NavigationContainer } from '@react-navigation/native';
+import { HighlightedDataProvider } from './src/providers/highlightedData';
 
 
 export default function App() {
@@ -29,9 +33,11 @@ export default function App() {
 
   return (
     <ThemeProvider theme={ theme }>
-      <NavigationContainer>
-        <AppRoutes />
-      </NavigationContainer>
+      <HighlightedDataProvider>
+        <NavigationContainer>
+          <AppRoutes />
+        </NavigationContainer>
+      </HighlightedDataProvider>
     </ThemeProvider>
   );
 }
