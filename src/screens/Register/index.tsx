@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Modal, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import { useForm } from "react-hook-form";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 import * as Yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import uuid from "react-native-uuid";
-import { useNavigation } from "@react-navigation/native";
 
 import { InputForm } from "../../components/Forms/InputForm";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
@@ -87,7 +87,7 @@ export const Register = () => {
         newTransaction //stores the new incoming data 
       ]
       await AsyncStorage.setItem(dataKey, JSON.stringify(formattedData)); //save the new formatted into async 
-      reset();
+      reset(); //reset form fields
       setSelectedButton('');
       setCategory({
         key: 'category',
