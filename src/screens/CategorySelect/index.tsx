@@ -1,6 +1,6 @@
-import { NavigationContext, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { FlatList } from "react-native";
+import { useTheme } from "styled-components";
 import { Button } from "../../components/Forms/Button";
 import { ReturnButton } from "../../components/ReturnButton";
 import { categories } from "../../utils/categories";
@@ -17,12 +17,8 @@ interface CategoryProps {
   closeSelectCategory: () => void; //closes the modal
 }
 
-type NavigationProps = {
-  navigate: (screen: string) => void;
-}
-
 export const CategorySelect = ({ category, setCategory, closeSelectCategory }: CategoryProps) => {
-  const navigation = useNavigation<NavigationProps>();
+  const theme = useTheme()
   const handleCategorySelect = (category: Category) => {
     setCategory(category);
   }
@@ -32,8 +28,13 @@ export const CategorySelect = ({ category, setCategory, closeSelectCategory }: C
       <Header>
         <ReturnButton
           iconName="chevron-left"
+          onPress={() => closeSelectCategory()}
         />
         <Title>Category</Title>
+        <Icon 
+          name="chevron-right"
+          style={{color: theme.colors.primary}} 
+        /> 
       </Header>
       <FlatList 
         data={categories}

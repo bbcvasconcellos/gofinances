@@ -22,9 +22,11 @@ export const Header = styled.View`
 
   background-color: ${({ theme }) => theme.colors.primary};
 
-  align-items: center;
-  justify-content: flex-end;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
 
+  padding: ${RFValue(15)}px;
   padding-bottom: 19px;
 `;
 
@@ -33,17 +35,6 @@ export const Title = styled.Text`
   font-size: ${RFValue(18)}px;
   color: ${({ theme }) => theme.colors.shape};
 `;
-
-/* export const ReturnButton = styled(Feather)`
-  font-size: ${RFValue(25)}px;
-  color: ${({ theme }) => theme.colors.shape};
-
-  align-self: flex-start;
-
-  left: 5px;
-  bottom: 19px;
-  position: absolute;
-`; */
 
 export const Category = styled.TouchableOpacity<CategoryProps>`
   width: 100%;

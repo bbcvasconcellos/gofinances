@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { HistoryCard } from '../../components/HistoryCard';
-import { Container, Content, GraphContainer, Header, Title } from './styles';
-import { DataListProps } from '../../components/Transactions';
-import { categories } from '../../utils/categories';
 import { VictoryPie } from 'victory-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import theme from '../../Global/Styles/theme';
+import { addMonths } from 'date-fns';
+
 import { useTheme } from 'styled-components';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+
+import { HistoryCard } from '../../components/HistoryCard';
+import { DataListProps } from '../../components/Transactions';
+import { categories } from '../../utils/categories';
+
+import { Container, Content, GraphContainer, Header, Title } from './styles';
+import { SelectMonth } from '../../components/SelectMonth';
 
 
 interface CategoryData {
@@ -20,7 +25,10 @@ interface CategoryData {
 
 export const Spending = () => {
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const theme = useTheme();
+
   const dataKey = '@gofinances:transactions';
 
   useEffect(() => {
@@ -28,7 +36,11 @@ export const Spending = () => {
       const response = await AsyncStorage.getItem(dataKey);
       const responseFormated = response ? JSON.parse(response) : [];
       
-      const expenses = responseFormated.filter((expense: DataListProps) => expense.type === 'negative');
+      const expenses = responseFormated.filter((expense: DataListProps) => 
+        expense.type === 'negative' && 
+        new Date(expense.date).getMonth() === selectedDate.getMonth() &&
+        new Date(expense.date).getFullYear() === selectedDate.getFullYear()
+      );
 
       const totalExpense = expenses.reduce((acc: number, expense: DataListProps) => {
         return acc + Number(expense.amount)
@@ -64,14 +76,24 @@ export const Spending = () => {
       setTotalByCategories(totalByCategories);      
     }
     loadData();
-  }, []);
+  }, [selectedDate]);
 
   return (
     <Container>
       <Header>
         <Title>My Spendings</Title>
       </Header>
-      <Content>
+      <Content
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 24,
+          paddingBottom: useBottomTabBarHeight(),
+        }}
+      >
+        <SelectMonth 
+          selectedDate={ selectedDate }
+          setSelectedDate={ setSelectedDate }
+        />
         <GraphContainer>
           <VictoryPie 
             data={totalByCategories}
