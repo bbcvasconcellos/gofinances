@@ -17,6 +17,7 @@ import { AppRoutes } from './src/routes/app.routes';
 import { NavigationContainer } from '@react-navigation/native';
 import { HighlightedDataProvider } from './src/providers/highlightedData';
 import { SignIn } from './src/screens/SignIn';
+import { AuthProvider } from './src/hooks/Auth';
 
 
 export default function App() {
@@ -37,8 +38,10 @@ export default function App() {
     <ThemeProvider theme={ theme }>
       <HighlightedDataProvider>
         <NavigationContainer>
-          <StatusBar barStyle='light-content'/>
-          {/* <AppRoutes /> */}
+          <AuthProvider>
+            <StatusBar barStyle='light-content'/>
+            {/* <AppRoutes /> */}
+          </AuthProvider>
           <SignIn />
         </NavigationContainer>
       </HighlightedDataProvider>

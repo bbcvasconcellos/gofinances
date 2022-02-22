@@ -1,12 +1,19 @@
 import React from "react"
-import { descriptions } from "../../utils/descriptions";
 import AppleSvg from "../../assets/apple.svg";
 import GoogleSvg from "../../assets/google-icon.svg";
 import LogoSvg from "../../assets/gofinances-logo.svg";
 import { RFValue } from "react-native-responsive-fontsize";
-import { Container, Footer, Header, SignInTitle, Title, TitleWrapper } from "./styles"
+
+import { SignInSocialButton } from "../../components/SignInSocialButton";
+import { useAuth } from "../../hooks/Auth";
+import { descriptions } from "../../utils/descriptions";
+
+import { Container, Footer, FooterWrapper, Header, SignInTitle, Title, TitleWrapper } from "./styles"
+
 
 export const SignIn = () => {
+  const { user } = useAuth();
+  
   return (
     <Container>
       <Header>
@@ -22,7 +29,16 @@ export const SignIn = () => {
         </SignInTitle>
       </Header>
       <Footer>
-
+        <FooterWrapper>
+          <SignInSocialButton 
+            title={descriptions.googleButton}
+            svg={GoogleSvg}
+          />
+          <SignInSocialButton
+            title={descriptions.appleButton}
+            svg={AppleSvg}
+          />
+        </FooterWrapper>
       </Footer>
       
     </Container>
