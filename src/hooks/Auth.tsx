@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode, useContext } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
+import * as AuthSession from 'expo-auth-session';
 
 interface AuthProps {
   children: ReactNode;
@@ -13,18 +14,52 @@ interface User {
 
 interface IAuthContextData {
   user: User;
+  signInWithGoogle: () => Promise<void>;
+}
+
+interface AuthResponse {
+  params: {
+    access_token: string;
+  }
+  type: string;
 }
 
 export const AuthContext = createContext({} as IAuthContextData);
 
 const AuthProvider = ({ children }: AuthProps) => {
-  const user = {
-    id: '',
-    name: '',
-    email: ''
+  const [user, setUser] = useState<User>({} as User)
+
+  const signInWithGoogle = async() => {
+    try {
+      const CLIENT_ID = '1052566430732-hl1m7hmm76canen8go0s7llr6ddvo490.apps.googleusercontent.com';
+      const REDIRECT_URI = 'https://auth.expo.io/@bbcvasconcellos/gofinances';
+      const RESPONSE_TYPE = 'token';
+      const SCOPE = encodeURI('profile email');
+
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+      
+      const { params, type } = await AuthSession.startAsync({ authUrl }) as AuthResponse;
+
+      if(type === 'success') {
+        const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`);
+        const userInfo =  await response.json();
+        console.log(userInfo);
+        
+        setUser({
+          id: userInfo.id,
+          email: userInfo.email,
+          name: userInfo.name,
+          photo: userInfo.picture
+        })
+        
+      }
+
+    } catch(error) {  
+      throw new Error(error);
+    }
   }
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, signInWithGoogle }}>
       { children }
     </AuthContext.Provider>
   )

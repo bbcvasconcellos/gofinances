@@ -41,8 +41,8 @@ export default function App() {
           <AuthProvider>
             <StatusBar barStyle='light-content'/>
             {/* <AppRoutes /> */}
+            <SignIn />
           </AuthProvider>
-          <SignIn />
         </NavigationContainer>
       </HighlightedDataProvider>
     </ThemeProvider>
