@@ -21,14 +21,14 @@ export const Dashboard = () => {
   const dataKey = "@gofinances:transactions";
 
   const getLastTransactionDate = (collection: DataListProps[], transactionType: 'positive' | 'negative') => {
-    const lastTransaction = Math.max.apply(Math, collection
+    const lastTransaction = new Date(Math.max.apply(Math, collection
       .filter((transaction: DataListProps) => transaction.type === transactionType)
-      .map((transaction: DataListProps) => new Date(transaction.date).getTime()))
+      .map((transaction: DataListProps) => new Date(transaction.date).getTime())))      
 
-    return Intl.DateTimeFormat('en-US', {
+    return `${lastTransaction.toLocaleDateString('en-US', {
       day: '2-digit',
       month: 'long'
-    }).format(new Date(lastTransaction))
+    })}`
   }
   
   const getTransactions = async() => {
@@ -106,7 +106,7 @@ export const Dashboard = () => {
   /*Updates the list whenever the user return to the page*/
   useFocusEffect(useCallback(() => {
     getTransactions();
-  }, []))
+  }, []))  
 
   return (
     <Container>
@@ -124,7 +124,7 @@ export const Dashboard = () => {
             type='up'
             title="income" 
             amount={highlightedData?.entries.amount}
-            lastTransaction={highlightedData.entries.lastTransaction}
+            lastTransaction={highlightedData?.entries?.lastTransaction}
           />
           <HighlightCard 
             type='down'
@@ -136,7 +136,6 @@ export const Dashboard = () => {
             type='total'
             title="total" 
             amount={highlightedData?.total.amount}
-            /* lastTransaction="Last transaction: January 2nd" */
           />
         </HighlightCards>
         <TransactionList transactions={transactions}/>

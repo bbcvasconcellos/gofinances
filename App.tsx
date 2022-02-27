@@ -13,11 +13,9 @@ import {
 import AppLoading from 'expo-app-loading';
 /* import { Dashboard } from './src/screens/Dashboard'; */
 import theme from './src/Global/Styles/theme'
-import { AppRoutes } from './src/routes/app.routes';
-import { NavigationContainer } from '@react-navigation/native';
 import { HighlightedDataProvider } from './src/providers/highlightedData';
-import { SignIn } from './src/screens/SignIn';
 import { AuthProvider } from './src/hooks/Auth';
+import { Routes } from './src/routes';
 
 
 export default function App() {
@@ -37,13 +35,10 @@ export default function App() {
   return (
     <ThemeProvider theme={ theme }>
       <HighlightedDataProvider>
-        <NavigationContainer>
-          <AuthProvider>
-            <StatusBar barStyle='light-content'/>
-            {/* <AppRoutes /> */}
-            <SignIn />
-          </AuthProvider>
-        </NavigationContainer>
+        <StatusBar barStyle='light-content'/>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </HighlightedDataProvider>
     </ThemeProvider>
   );

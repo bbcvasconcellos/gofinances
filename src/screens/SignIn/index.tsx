@@ -14,14 +14,23 @@ import { Container, Footer, FooterWrapper, Header, SignInTitle, Title, TitleWrap
 
 
 export const SignIn = () => {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithApple } = useAuth();
 
   const handleSignInWithGoogle = async() => {    
     try {
       await signInWithGoogle();
     } catch(error) {
       console.log(error);
-      Alert.alert('Something happened', 'It was not possible to connect to your Google account');
+      Alert.alert(descriptions.loginError, descriptions.googleLoginError);
+    }
+  }
+
+  const handleSignInWithApple = async() => {
+    try {
+      await signInWithApple();
+    } catch(error) {
+      console.log(error);
+      Alert.alert(descriptions.loginError, descriptions.appleLoginError);
     }
   }
   
@@ -49,6 +58,7 @@ export const SignIn = () => {
           <SignInSocialButton
             title={descriptions.appleButton}
             svg={AppleSvg}
+            onPress={handleSignInWithApple}
           />
         </FooterWrapper>
       </Footer>
