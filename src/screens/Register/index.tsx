@@ -14,6 +14,7 @@ import { Button } from "../../components/Forms/Button";
 import { Container, Header, Title, Form, ButtonContainer, Fields } from "./styles";
 import { CategorySelection } from "../../components/Forms/CategorySelection";
 import { CategorySelect } from "../CategorySelect";
+import { useAuth } from "../../hooks/Auth";
 
 
 interface FormData {
@@ -46,7 +47,8 @@ export const Register = () => {
     resolver: yupResolver(scheme) //this will create a pattern (defined in scheme) for the form submission 
   });
   const navigation = useNavigation<NavigationProps>();
-  const dataKey = "@gofinances:transactions";
+  const { user } = useAuth();
+  const dataKey = `@gofinances:transactions_user:${user.id}` ;
 
   const handleSelection = (type: 'positive' | 'negative') => {
     setSelectedButton(type)

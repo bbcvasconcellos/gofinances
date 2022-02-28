@@ -3,26 +3,33 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import { useTheme } from "styled-components";
-
+import { useAuth } from "../../hooks/Auth";
 import { HighlightCard } from "../../components/HighlightCard";
 import { DataListProps, TransactionList } from "../../components/Transactions";
 import { UserHeader } from "../../components/UserHeader";
 import { HighlightedDataContext } from "../../providers/highlightedData";
-import { Container, HighlightCards, LoadContainer } from "./styles";
 
+import { Container, HighlightCards, LoadContainer } from "./styles";
+import { useTheme } from "styled-components";
 
 export const Dashboard = () => {
   const theme = useTheme();
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { highlightedData, setHighlightedData } = useContext(HighlightedDataContext)
+  const { highlightedData, setHighlightedData } = useContext(HighlightedDataContext);
+  const { user } = useAuth();
 
-  const dataKey = "@gofinances:transactions";
+  const dataKey = `@gofinances:transactions_user:${user.id}`;
 
   const getLastTransactionDate = (collection: DataListProps[], transactionType: 'positive' | 'negative') => {
-    const lastTransaction = new Date(Math.max.apply(Math, collection
-      .filter((transaction: DataListProps) => transaction.type === transactionType)
+    const filteredCollection = collection
+    .filter((transaction: DataListProps) => transaction.type === transactionType);
+
+    if(!filteredCollection.length) {
+      return 0;
+    }
+
+    const lastTransaction = new Date(Math.max.apply(Math, filteredCollection
       .map((transaction: DataListProps) => new Date(transaction.date).getTime())))      
 
     return `${lastTransaction.toLocaleDateString('en-US', {
@@ -56,7 +63,7 @@ export const Dashboard = () => {
       } else {
         expensesTotal += Number(transaction.amount)
       }
-
+      
       return {
         id: transaction.id,
         name: transaction.name,
@@ -78,14 +85,14 @@ export const Dashboard = () => {
           style: 'currency',
           currency: 'usd'
         }),
-        lastTransaction: `Last transaction: ${lastEntry}`
+        lastTransaction: lastEntry === 0 ?  'No transactions history available' : `Last transaction: ${lastEntry}`
       },
       expenses: {
         amount: expensesTotal.toLocaleString('en-US', {
           style: 'currency',
           currency: 'usd'
         }),
-        lastTransaction: `Last transaction: ${lastExpense}`
+        lastTransaction: lastExpense === 0 ?  'No transactions history available' : `Last transaction: ${lastExpense}`
       },
       total: {
         amount: (entriesTotal - expensesTotal).toLocaleString('en-US', {

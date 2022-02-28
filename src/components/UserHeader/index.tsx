@@ -1,3 +1,4 @@
+import { useAuth } from "../../hooks/Auth"
 import { 
   Header,
   UserContainer,
@@ -11,18 +12,20 @@ import {
 } from "./style"
 
 export const UserHeader = () => {
+  const { signOut, user } = useAuth();
+
   return (
     <Header>
     <UserContainer>
       <UserData>
         <ProfilePic
-          source={{ uri: "https://avatars.githubusercontent.com/u/61482516?v=4" }}/>
+          source={{ uri: `https://ui-avatars.com/api/?name=${user.name}` }}/>
         <UserBox>
           <UserGreeting>Hello, </UserGreeting>
-          <UserName>Bruno!</UserName>
+          <UserName>{user.name}</UserName>
         </UserBox>
       </UserData>
-      <LogoutButton onPress={() => {}}>
+      <LogoutButton onPress={signOut}>
         <Icon name="power" />
       </LogoutButton>
     </UserContainer>

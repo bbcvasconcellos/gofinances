@@ -14,7 +14,7 @@ import AppLoading from 'expo-app-loading';
 /* import { Dashboard } from './src/screens/Dashboard'; */
 import theme from './src/Global/Styles/theme'
 import { HighlightedDataProvider } from './src/providers/highlightedData';
-import { AuthProvider } from './src/hooks/Auth';
+import { AuthProvider, useAuth } from './src/hooks/Auth';
 import { Routes } from './src/routes';
 
 
@@ -27,8 +27,9 @@ export default function App() {
     Poppins_500Medium,
     Poppins_700Bold
   });
+  const { isLoading } = useAuth();
 
-  if(!fontsLoaded) {
+  if(!fontsLoaded || isLoading) {
     return <AppLoading />
   }
 

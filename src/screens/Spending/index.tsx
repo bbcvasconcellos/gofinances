@@ -15,6 +15,7 @@ import { Container, Content, GraphContainer, Header, LoadContainer, Title } from
 import { SelectMonth } from '../../components/SelectMonth';
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../hooks/Auth';
 
 
 interface CategoryData {
@@ -31,8 +32,9 @@ export const Spending = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
+  const { user } = useAuth();
 
-  const dataKey = '@gofinances:transactions';
+  const dataKey = `@gofinances:transactions_user:${user.id}`;
 
   const loadData = async() => {
     setIsLoading(true);
